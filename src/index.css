@@ -793,3 +793,14 @@ body:has(.quiz) .github-corner {
   .github-corner:hover .octo-arm { animation: none; }
   .github-corner .octo-arm { animation: octocat-wave 560ms ease-in-out; }
 }
+
+/* ====== Snapshot Mode (html2canvas compatibility) ====== */
+/* html2canvas 不支持 background-clip: text，仅对渐变文字做降级 */
+
+.snapshot-mode .result-tagline {
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  color: var(--theme, var(--accent));
+}

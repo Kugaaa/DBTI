@@ -45,11 +45,14 @@ export default function ResultView({ result, onRetry }: ResultViewProps) {
     if (!cardRef.current || saving) return;
     setSaving(true);
     try {
+      cardRef.current.classList.add("snapshot-mode");
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: "#0a0a0f",
         scale: 2,
         useCORS: true,
       });
+      cardRef.current.classList.remove("snapshot-mode");
       const dataUrl = canvas.toDataURL("image/png");
 
       if (navigator.share && /mobile|android/i.test(navigator.userAgent)) {

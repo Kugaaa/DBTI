@@ -55,11 +55,14 @@ function PersonalityDetail({ p, onBack }: { p: Personality; onBack: () => void }
     if (!snapshotRef.current || saving) return;
     setSaving(true);
     try {
+      snapshotRef.current.classList.add("snapshot-mode");
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const canvas = await html2canvas(snapshotRef.current, {
         backgroundColor: "#0a0a0f",
         scale: 2,
         useCORS: true,
       });
+      snapshotRef.current.classList.remove("snapshot-mode");
       const dataUrl = canvas.toDataURL("image/png");
 
       if (navigator.share && /mobile|android/i.test(navigator.userAgent)) {

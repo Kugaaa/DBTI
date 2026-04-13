@@ -167,25 +167,47 @@ body {
   padding: 20px 0;
 }
 
-.quiz-logo {
+.quiz-topbar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1px;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  text-decoration: none;
+  justify-content: space-between;
   margin-bottom: 12px;
+}
+
+.topbar-home {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
   transition: opacity 0.2s;
 }
 
-.quiz-logo:hover { opacity: 0.7; }
+.topbar-home:hover { opacity: 0.7; }
 
 .logo-d { color: #FF4D4F; }
 .logo-b { color: #FA541C; }
 .logo-t { color: #1677FF; }
 .logo-i { color: #722ED1; }
+
+.topbar-github {
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.topbar-github:hover {
+  color: var(--text);
+  background: var(--surface);
+}
 
 .quiz-header {
   display: flex;
@@ -302,9 +324,11 @@ body {
   line-height: 1.5;
 }
 
-.option-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  background: var(--surface-2);
+@media (hover: hover) {
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--text-2);
+    background: var(--surface-2);
+  }
 }
 
 .option-selected {
@@ -549,6 +573,11 @@ body {
   left: 0;
   z-index: 999;
   display: block;
+}
+
+.quiz ~ .github-corner,
+body:has(.quiz) .github-corner {
+  display: none;
 }
 
 .github-corner svg {

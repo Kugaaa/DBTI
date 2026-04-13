@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo, useRef } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { questions } from "../data/questions";
 import { calculateResult } from "../utils/scoring";
 
@@ -16,10 +16,17 @@ function shuffleOptions<T>(arr: T[], seed: number): T[] {
 
 export default function Quiz() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromWelcome = useRef(location.state?.from === "welcome");
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selected, setSelected] = useState<string | null>(null);
   const [animating, setAnimating] = useState(false);
+
+  if (!fromWelcome.current && current === 0 && Object.keys(answers).length === 0) {
+    navigate("/", { replace: true });
+    return null;
+  }
 
   const total = questions.length;
   const question = questions[current];
@@ -59,6 +66,13 @@ export default function Quiz() {
 
   return (
     <div className="quiz">
+      <Link to="/" className="quiz-logo">
+        <span className="logo-d">D</span>
+        <span className="logo-b">B</span>
+        <span className="logo-t">T</span>
+        <span className="logo-i">I</span>
+      </Link>
+
       <div className="quiz-header">
         <button
           className="btn-back"

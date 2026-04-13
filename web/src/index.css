@@ -167,6 +167,26 @@ body {
   padding: 20px 0;
 }
 
+.quiz-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-decoration: none;
+  margin-bottom: 12px;
+  transition: opacity 0.2s;
+}
+
+.quiz-logo:hover { opacity: 0.7; }
+
+.logo-d { color: #FF4D4F; }
+.logo-b { color: #FA541C; }
+.logo-t { color: #1677FF; }
+.logo-i { color: #722ED1; }
+
 .quiz-header {
   display: flex;
   align-items: center;

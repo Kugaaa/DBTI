@@ -47,7 +47,7 @@ export default function Welcome() {
         </div>
       </div>
 
-      <button className="btn-start" onClick={() => navigate("/quiz")}>
+      <button className="btn-start" onClick={() => navigate("/quiz", { state: { from: "welcome" } })}>
         开始测试
       </button>
 

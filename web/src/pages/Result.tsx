@@ -1,4 +1,3 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import { dimensionNames, type DBTIResult, type DimensionKey } from "../utils/scoring";
 
 const CORE_DIMS: DimensionKey[] = ["D", "E", "S"];
@@ -30,22 +29,12 @@ function DimensionBar({ dimKey, standard, level }: { dimKey: DimensionKey; stand
   );
 }
 
-export default function Result() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const result = (location.state as { result: DBTIResult } | null)?.result;
+interface ResultViewProps {
+  result: DBTIResult;
+  onRetry: () => void;
+}
 
-  if (!result) {
-    return (
-      <div className="result">
-        <p>没有找到测试结果</p>
-        <button className="btn-start" onClick={() => navigate("/")}>
-          重新开始
-        </button>
-      </div>
-    );
-  }
-
+export default function ResultView({ result, onRetry }: ResultViewProps) {
   const { personality: p, scores } = result;
 
   return (
@@ -98,7 +87,7 @@ export default function Result() {
       </div>
 
       <div className="result-actions">
-        <button className="btn-start" onClick={() => navigate("/")}>
+        <button className="btn-start" onClick={onRetry}>
           再测一次
         </button>
       </div>

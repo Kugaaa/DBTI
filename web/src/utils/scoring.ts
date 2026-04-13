@@ -1,7 +1,7 @@
-import type { Question } from "../data/questions";
+import type { Question, DimKey } from "../data/questions";
 import { findPersonality, personalities, type Personality } from "../data/personalities";
 
-export type DimensionKey = "D" | "E" | "S" | "C" | "G";
+export type DimensionKey = DimKey;
 export type Level = "H" | "M" | "L";
 
 export interface DimensionScore {
@@ -23,7 +23,8 @@ function toLevel(standard: number): Level {
 }
 
 function normalize(raw: number): number {
-  return Math.round(((raw + 18) / 36) * 100);
+  const clamped = Math.max(-18, Math.min(18, raw));
+  return Math.round(((clamped + 18) / 36) * 100);
 }
 
 function isExtreme(level: Level): boolean {
@@ -49,7 +50,9 @@ export function calculateResult(
       hiddenTriggered = true;
     }
 
-    rawScores[q.dimension] += option.score;
+    for (const [dim, val] of Object.entries(option.scores)) {
+      rawScores[dim as DimensionKey] += val;
+    }
   }
 
   const scores: Record<DimensionKey, DimensionScore> = {} as Record<DimensionKey, DimensionScore>;
@@ -75,6 +78,6 @@ export const dimensionNames: Record<DimensionKey, { name: string; label: string;
   D: { name: "酒势", label: "Drive", levels: { H: "猛", M: "稳", L: "避" } },
   E: { name: "酒能", label: "Energy", levels: { H: "燥", M: "衡", L: "静" } },
   S: { name: "酒魂", label: "Soul", levels: { H: "真", M: "摇", L: "铁" } },
-  C: { name: "酒量", label: "Capacity", levels: { H: "海量", M: "普通", L: "一碰就倒" } },
+  C: { name: "酒量", label: "Capacity", levels: { H: "绝对海量", M: "马马虎虎", L: "一碰就倒" } },
   G: { name: "酒德", label: "Grace", levels: { H: "照顾全场", M: "自得其乐", L: "制造混乱" } },
 };

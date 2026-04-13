@@ -1,9 +1,10 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { questions } from "../data/questions";
-import { calculateResult } from "../utils/scoring";
+import { calculateResult, type DBTIResult } from "../utils/scoring";
+import ResultView from "./Result";
 
-function shuffleOptions<T>(arr: T[], seed: number): T[] {
+function seededShuffle<T>(arr: T[], seed: number): T[] {
   const a = [...arr];
   let s = seed;
   for (let i = a.length - 1; i > 0; i--) {
@@ -18,12 +19,19 @@ export default function Quiz() {
   const navigate = useNavigate();
   const location = useLocation();
   const fromWelcome = useRef(location.state?.from === "welcome");
+  const sessionSeed = useRef(Date.now());
+  const shuffledQuestions = useMemo(() => {
+    const hidden = questions.filter((q) => q.isHidden);
+    const normal = questions.filter((q) => !q.isHidden);
+    return [...seededShuffle(normal, sessionSeed.current), ...hidden];
+  }, []);
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selected, setSelected] = useState<string | null>(null);
   const [animating, setAnimating] = useState(false);
+  const [result, setResult] = useState<DBTIResult | null>(null);
 
-  const hasStarted = Object.keys(answers).length > 0;
+  const hasStarted = Object.keys(answers).length > 0 && !result;
 
   useEffect(() => {
     if (!hasStarted) return;
@@ -43,19 +51,20 @@ export default function Quiz() {
     [hasStarted]
   );
 
-  if (!fromWelcome.current && current === 0 && Object.keys(answers).length === 0) {
+  if (!fromWelcome.current && current === 0 && Object.keys(answers).length === 0 && !result) {
     navigate("/", { replace: true });
     return null;
   }
 
-  const total = questions.length;
-  const question = questions[current];
+  if (result) {
+    return <ResultView result={result} onRetry={() => navigate("/")} />;
+  }
+
+  const total = shuffledQuestions.length;
+  const question = shuffledQuestions[current];
   const progress = ((current) / total) * 100;
 
-  const shuffledOptions = useMemo(
-    () => shuffleOptions(question.options, current * 7 + 42),
-    [current, question.options]
-  );
+  const shuffledOptions = seededShuffle(question.options, current * 7 + 42);
 
   function handleSelect(optionId: string) {
     if (animating) return;
@@ -71,8 +80,8 @@ export default function Quiz() {
         setSelected(null);
         setAnimating(false);
       } else {
-        const result = calculateResult(questions, newAnswers);
-        navigate("/result", { state: { result } });
+        const r = calculateResult(shuffledQuestions, newAnswers);
+        setResult(r);
       }
     }, 400);
   }

@@ -1,13 +1,17 @@
+export type DimKey = "D" | "E" | "S" | "C" | "G";
+
 export interface Option {
   id: string;
   text: string;
-  score: number;
+  /** 每个选项可影响多个维度，key 为维度，value 为分值 (-3 ~ +3) */
+  scores: Partial<Record<DimKey, number>>;
   hiddenTrigger?: boolean;
 }
 
 export interface Question {
   id: string;
-  dimension: "D" | "E" | "S" | "C" | "G";
+  /** 主维度，用于 UI 展示标签 */
+  dimension: DimKey;
   angle: string;
   text: string;
   options: Option[];
@@ -16,287 +20,282 @@ export interface Question {
 
 export const questions: Question[] = [
   // ==================== D 酒势 (Drive) ====================
-  // 测量：你和酒的主动性关系——猛/稳/避
   {
-    id: "Q01", dimension: "D", angle: "接到邀请",
-    text: "周五下午六点，你收到消息：「今晚老地方，不醉不归。」你的第一反应？",
+    id: "Q01", dimension: "D", angle: "入场仪式",
+    text: "居酒屋菜单上有个「今日隐藏特调」，只写了酒精度 15%。你？",
     options: [
-      { id: "A", text: "秒回「几点到？我带骰子」，顺便在群里再拉三个人", score: 3 },
-      { id: "B", text: "「谁来？发个名单我看看阵容再说」", score: 0 },
-      { id: "C", text: "已读不回，祈祷没人 @ 你", score: -3 },
+      { id: "A", text: "「来一杯！不踩雷怎么知道好不好喝」", scores: { D: 3, E: 1 } },
+      { id: "B", text: "先问店员配方，听完觉得行再点", scores: { D: 0, G: 1 } },
+      { id: "C", text: "15%？告辞。默默划到无酒精饮品区", scores: { D: -3 } },
     ],
   },
   {
-    id: "Q02", dimension: "D", angle: "到场表现",
-    text: "你到了酒局现场，桌上摆满了酒。你的标准开局动作？",
+    id: "Q02", dimension: "D", angle: "冰箱考古",
+    text: "朋友来你家做客，打开冰箱说「你冰箱也太能反映性格了」。他看到的是？",
     options: [
-      { id: "A", text: "先给自己满上：「来来来，我开个头！」", score: 3 },
-      { id: "B", text: "看看大家喝什么，跟着点一样的", score: 0 },
-      { id: "C", text: "坐到离酒最远的位置，默默打开矿泉水", score: -3 },
+      { id: "A", text: "三种精酿、一瓶清酒、角落还有半瓶金酒——小型酒吧", scores: { D: 3 } },
+      { id: "B", text: "上次聚会剩的两罐啤酒，过期了也不知道", scores: { D: -1, S: -1 } },
+      { id: "C", text: "纯净水、牛奶、气泡水——一滴酒精都没有", scores: { D: -3 } },
     ],
   },
   {
-    id: "Q03", dimension: "D", angle: "被劝酒时",
-    text: "有人端着酒杯过来：「这杯必须干了，不给面子啊？」你？",
+    id: "Q03", dimension: "D", angle: "独处仪式",
+    text: "周三加班到十点，回家瘫在沙发上。你的「解压三件套」里有酒吗？",
     options: [
-      { id: "A", text: "「就这？再来一杯我陪你！」直接反劝", score: 3 },
-      { id: "B", text: "笑着碰杯，喝多少看心情", score: 0 },
-      { id: "C", text: "掏出手机：「不好意思，刚吃了头孢」", score: -3 },
+      { id: "A", text: "必须有。开一罐冰啤配垃圾食品是刚需", scores: { D: 3, S: 1 } },
+      { id: "B", text: "偶尔吧，大多数时候刷手机就够了", scores: { D: 0 } },
+      { id: "C", text: "解压靠睡觉，酒只会让你更累", scores: { D: -3 } },
     ],
   },
   {
-    id: "Q04", dimension: "D", angle: "酒过三巡",
-    text: "桌上的酒快见底了，你的态度？",
+    id: "Q04", dimension: "D", angle: "礼物哲学",
+    text: "闺蜜/兄弟过生日，你在小红书上做了半小时攻略。最后买的是？",
     options: [
-      { id: "A", text: "叫服务员：「再来两打！」全场欢呼", score: 3 },
-      { id: "B", text: "「大家还喝吗？喝的话我加，不喝就算了」", score: 0 },
-      { id: "C", text: "心里暗喜终于要结束了，嘴上说「够了够了」", score: -3 },
+      { id: "A", text: "一瓶包装好看的小众威士忌，卡片上写「记得配圆冰」", scores: { D: 2, G: 1, S: 1 } },
+      { id: "B", text: "网红蛋糕 + 红包，不出错就是最大的成功", scores: { D: 0, G: 1 } },
+      { id: "C", text: "一本 TA 提过想看的书——你们之间的默契不需要酒", scores: { D: -2, S: 1 } },
     ],
   },
   {
-    id: "Q05", dimension: "D", angle: "续摊抉择",
-    text: "凌晨一点，有人提议转场去酒吧续摊。你？",
+    id: "Q05", dimension: "D", angle: "旅行人格",
+    text: "到了一个新城市，你发的第一条朋友圈大概率是？",
     options: [
-      { id: "A", text: "「走！我知道一家新开的，DJ 炸裂！」", score: 3 },
-      { id: "B", text: "「都行，你们定地方我跟着」", score: 0 },
-      { id: "C", text: "你半小时前就已经在滴滴上输好了家的地址", score: -3 },
+      { id: "A", text: "当地酒吧的精酿墙 + 定位，配文「又来交作业了」", scores: { D: 3, E: 1 } },
+      { id: "B", text: "街边大排档，桌上刚好有瓶本地啤酒入镜", scores: { D: 1 } },
+      { id: "C", text: "咖啡厅、书店、寺庙——你的旅行和酒无关", scores: { D: -2, E: -1 } },
     ],
   },
   {
-    id: "Q06", dimension: "D", angle: "第二天回顾",
-    text: "第二天醒来，关于昨晚酒局你的第一念头？",
+    id: "Q06", dimension: "D", angle: "自我认知",
+    text: "朋友圈转疯了一篇「当代年轻人酒局生存指南」，你看完的感想？",
     options: [
-      { id: "A", text: "「爽！下次什么时候？」已经开始约了", score: 3 },
-      { id: "B", text: "「还行吧」翻翻朋友圈看看大家发了啥", score: 0 },
-      { id: "C", text: "「我发誓再也不去了」有效期约三天", score: -3 },
+      { id: "A", text: "「指南？我就是指南本南」转发到三个群", scores: { D: 3, E: 2 } },
+      { id: "B", text: "默默收藏，下次用得上", scores: { D: 0 } },
+      { id: "C", text: "「我的生存指南就一条：别去」", scores: { D: -3, E: -1 } },
     ],
   },
 
   // ==================== E 酒能 (Energy) ====================
-  // 测量：醉后能量外放还是内收——燥/衡/静
   {
-    id: "Q07", dimension: "E", angle: "微醺状态",
-    text: "喝到微醺时，你的音量和动作幅度会？",
+    id: "Q07", dimension: "E", angle: "地图炮",
+    text: "你和朋友在大众点评选喝酒的地方。你手指划向？",
     options: [
-      { id: "A", text: "音量翻倍，拍桌敬酒，方圆三桌都知道你在这", score: 3 },
-      { id: "B", text: "比平时活跃一点，话多了些，但还在座位上", score: 0 },
-      { id: "C", text: "反而更安静了，缩在角落像按了静音键", score: -3 },
+      { id: "A", text: "「评分4.2但评论说超吵」——完美，气氛这不就来了", scores: { E: 3, D: 1 } },
+      { id: "B", text: "「环境安静适合聊天」——重点是聊，酒是配角", scores: { E: -1, S: 1 } },
+      { id: "C", text: "「可以点外卖送到家」——出门是不可能出门的", scores: { E: -3, D: -1 } },
     ],
   },
   {
-    id: "Q08", dimension: "E", angle: "游戏互动",
-    text: "有人提议玩骰子 / 真心话大冒险，你的反应？",
+    id: "Q08", dimension: "E", angle: "BGM 反射弧",
+    text: "微醺时，酒吧突然放了一首你单曲循环过一百遍的歌。你的身体？",
     options: [
-      { id: "A", text: "「我来定规则！输了罚三杯！」秒变主持人", score: 3 },
-      { id: "B", text: "跟着玩，偶尔起哄，气氛到了笑得挺大声", score: 0 },
-      { id: "C", text: "「你们玩，我看着就好」然后掏出手机", score: -3 },
+      { id: "A", text: "条件反射站起来，拿着酒瓶当话筒，朋友在拍你", scores: { E: 3, G: -1 } },
+      { id: "B", text: "嘴角上扬开始跟着哼，手指在桌上打节拍", scores: { E: 0, S: 1 } },
+      { id: "C", text: "突然觉得很吵，默默戴上一只耳机", scores: { E: -3 } },
     ],
   },
   {
-    id: "Q09", dimension: "E", angle: "社交半径",
-    text: "喝开了之后，你和周围人的距离？",
+    id: "Q09", dimension: "E", angle: "搭讪体质",
+    text: "隔壁桌有个人穿了件你喜欢的乐队的 T 恤。你？",
     options: [
-      { id: "A", text: "全场巡回敬酒，连隔壁桌不认识的人都聊上了", score: 3 },
-      { id: "B", text: "跟本桌聊得更起劲，偶尔跟旁边搭个话", score: 0 },
-      { id: "C", text: "社交圈反而缩小了，只跟身边一两人低声聊", score: -3 },
+      { id: "A", text: "端着酒过去：「这巡演你也去了？」聊到加微信", scores: { E: 3, S: 1, D: 1 } },
+      { id: "B", text: "多看了两眼，在心里默默点赞", scores: { E: 0 } },
+      { id: "C", text: "没注意到——你一直在看自己的手机", scores: { E: -2, S: -1 } },
     ],
   },
   {
-    id: "Q10", dimension: "E", angle: "KTV 画风",
-    text: "酒局后转场 KTV，你的画风？",
+    id: "Q10", dimension: "E", angle: "话题霸主",
+    text: "桌上有人在讲一个你听过三遍的段子，而且讲错了。你？",
     options: [
-      { id: "A", text: "抢过话筒从《死了都要爱》吼到《海阔天空》，全程不下台", score: 3 },
-      { id: "B", text: "合唱时参与，偶尔点一两首自己喜欢的", score: 0 },
-      { id: "C", text: "缩在沙发角落吃果盘，或者压根没跟来", score: -3 },
+      { id: "A", text: "「不对不对，原版是这样的——」直接接管话语权", scores: { E: 3, G: -1 } },
+      { id: "B", text: "配合笑一下，等 TA 讲完自己再补个更好的", scores: { E: 0, G: 1 } },
+      { id: "C", text: "面无表情在心里默默修改了三个错误，但一字不说", scores: { E: -3, S: -1 } },
     ],
   },
   {
-    id: "Q11", dimension: "E", angle: "肢体语言",
-    text: "醉了之后你的肢体语言是？",
+    id: "Q11", dimension: "E", angle: "续命信号",
+    text: "凌晨十二点，你正准备打车走。群里弹出一条语音：「刚到！等你们！」",
     options: [
-      { id: "A", text: "搂肩拍背勾脖子，物理距离为零", score: 3 },
-      { id: "B", text: "比平时多些接触，碰碰杯拍拍肩", score: 0 },
-      { id: "C", text: "整个人趴桌上 / 靠椅背，像一台关机的电脑", score: -3 },
+      { id: "A", text: "把打车软件关了：「来都来了！」原地复活", scores: { E: 3, D: 1 } },
+      { id: "B", text: "犹豫了五秒，回了句「再坐会儿就走」", scores: { E: 0 } },
+      { id: "C", text: "假装没看到，人已经在车上了。明天回复「啊我没看到」", scores: { E: -3, G: -1 } },
     ],
   },
   {
-    id: "Q12", dimension: "E", angle: "散场能量",
-    text: "酒局散场那一刻，你的状态？",
+    id: "Q12", dimension: "E", angle: "宿醉社交",
+    text: "喝大了的第二天，朋友发来消息「去吃个 brunch？」你？",
     options: [
-      { id: "A", text: "「这就散了？再喝！」你是最后一个愿意走的", score: 3 },
-      { id: "B", text: "意犹未尽但可以接受，热情道别", score: 0 },
-      { id: "C", text: "你一小时前就已经「人间蒸发」了", score: -3 },
+      { id: "A", text: "「走！聊聊昨晚谁最丢人」——社交就是你的续命丹", scores: { E: 2, S: 1 } },
+      { id: "B", text: "「下午吧，让我先躺一会」——你需要缓冲", scores: { E: 0, C: -1 } },
+      { id: "C", text: "已读不回。你在黑暗的被窝里发誓不再见任何人", scores: { E: -3 } },
     ],
   },
 
   // ==================== S 酒魂 (Soul) ====================
-  // 测量：醉后情感打开还是封锁——真/摇/铁
   {
-    id: "Q13", dimension: "S", angle: "真心话阈值",
-    text: "喝到一定程度，你干过最真情实感的事？",
+    id: "Q13", dimension: "S", angle: "emo 预警",
+    text: "你的酒后 Spotify/网易云年度报告显示深夜最爱播放的是？",
     options: [
-      { id: "A", text: "当场给人打电话说出藏了很久的心里话", score: 3 },
-      { id: "B", text: "跟朋友聊了些平时不太会聊的私密话题", score: 0 },
-      { id: "C", text: "没有。不管喝多少，嘴巴跟保险箱一样", score: -3 },
+      { id: "A", text: "朴树/陈绮贞/Radiohead——越喝越文艺越上头", scores: { S: 3, E: -1 } },
+      { id: "B", text: "随机播放，什么都听，不挑", scores: { S: 0 } },
+      { id: "C", text: "你喝酒不听歌，或者根本不在意在放什么", scores: { S: -3 } },
     ],
   },
   {
-    id: "Q14", dimension: "S", angle: "情绪决堤",
-    text: "酒桌上有人突然说了一句戳到你的话，你会？",
+    id: "Q14", dimension: "S", angle: "深夜编辑",
+    text: "凌晨两点，你微醺着打开了朋友圈。你编辑了十分钟发出去的是？",
     options: [
-      { id: "A", text: "眼眶立刻红了，当场没忍住", score: 3 },
-      { id: "B", text: "心里被触动，但过一会儿才可能表现出来", score: 0 },
-      { id: "C", text: "内心毫无波澜，情绪防火墙酒精穿透不了", score: -3 },
+      { id: "A", text: "一段没有配图的纯文字，看的人觉得你在写诗", scores: { S: 3, E: 1 } },
+      { id: "B", text: "一张天花板的照片，配文是一个省略号", scores: { S: 1 } },
+      { id: "C", text: "你打开了，又关了。你酒后的自制力比上班还强", scores: { S: -3, G: 1 } },
     ],
   },
   {
-    id: "Q15", dimension: "S", angle: "吐真言战绩",
-    text: "关于「酒后吐真言」，你的历史战绩？",
+    id: "Q15", dimension: "S", angle: "时光机",
+    text: "喝着酒，你刷到了大学时代的群聊记录截图。你？",
     options: [
-      { id: "A", text: "辉煌——表白过、道歉过、吐槽老板过", score: 3 },
-      { id: "B", text: "偶尔漏过几句，第二天后悔一整天", score: 0 },
-      { id: "C", text: "零记录。醉了说的话比清醒时还少", score: -3 },
+      { id: "A", text: "鼻子突然酸了，给当年的室友发了一条「想你们了」", scores: { S: 3, E: 1 } },
+      { id: "B", text: "嘴角一翘：「那时候真傻」——然后截图发了个九宫格", scores: { S: 0, E: 1 } },
+      { id: "C", text: "看了一秒就划走了，过去式的东西你不太留恋", scores: { S: -2 } },
     ],
   },
   {
-    id: "Q16", dimension: "S", angle: "醉后面具",
-    text: "朋友说「你喝醉后跟平时完全不一样」，你觉得？",
+    id: "Q16", dimension: "S", angle: "机场离别",
+    text: "送朋友出国的最后一顿，喝着喝着 TA 说「以后想你们了就看月亮」。你？",
     options: [
-      { id: "A", text: "「醉了才是真的我」——你一直这么觉得", score: 3 },
-      { id: "B", text: "「可能吧，有些话清醒时确实说不出口」", score: 0 },
-      { id: "C", text: "「不可能，我喝多了也是这样」——确实如此", score: -3 },
+      { id: "A", text: "没忍住，当场眼眶红了，嘴上还在说「矫情什么」", scores: { S: 3 } },
+      { id: "B", text: "心里一紧，但举起酒杯：「说好了常联系」", scores: { S: 0, G: 1 } },
+      { id: "C", text: "「说得好像去了火星一样，视频通话不行吗」", scores: { S: -3, E: 1 } },
     ],
   },
   {
-    id: "Q17", dimension: "S", angle: "深夜通讯录",
-    text: "酒后半夜打开手机通讯录，你最可能？",
+    id: "Q17", dimension: "S", angle: "社死现场",
+    text: "第二天早上打开微信，发现自己凌晨给前任发了三条语音。你？",
     options: [
-      { id: "A", text: "给前任 / 暗恋对象发一段语音长消息", score: 3 },
-      { id: "B", text: "在好友群发些平时不会发的感慨", score: 0 },
-      { id: "C", text: "喝再多也不碰手机。酒后社交？不存在的", score: -3 },
+      { id: "A", text: "听了一遍——虽然社死了但每个字都是真心话。不撤回", scores: { S: 3, G: -1 } },
+      { id: "B", text: "撤回两条，留了一条「最近还好吗」假装正常", scores: { S: 1 } },
+      { id: "C", text: "不可能发生。你喝到断片也不会碰通讯录", scores: { S: -3, G: 1 } },
     ],
   },
   {
-    id: "Q18", dimension: "S", angle: "次日社死",
-    text: "第二天看到自己昨晚发的消息 / 朋友圈，你？",
+    id: "Q18", dimension: "S", angle: "玄学认同",
+    text: "有人在酒桌上说「酒品看人品，醉了才是真的你」。你？",
     options: [
-      { id: "A", text: "一条不删——说了就说了，那是真心话", score: 3 },
-      { id: "B", text: "删了一部分，留了一部分，认了吧", score: 0 },
-      { id: "C", text: "不用删——你昨晚什么都没发过", score: -3 },
+      { id: "A", text: "被说中了——你喝酒就是为了卸下白天那层壳", scores: { S: 2, D: 1 } },
+      { id: "B", text: "半信半疑，可能得看跟谁喝吧", scores: { S: 0 } },
+      { id: "C", text: "不信。你醉了和醒着的时候一模一样，都很稳", scores: { S: -3 } },
     ],
   },
 
   // ==================== C 酒量 (Capacity) ====================
-  // 测量：物理耐受上限——海量/普通/一碰就倒
   {
-    id: "Q19", dimension: "C", angle: "绝对上限",
-    text: "一场正常酒局下来，你的极限大概在？",
+    id: "Q19", dimension: "C", angle: "预警系统",
+    text: "你身体的「酒精预警系统」是什么样的？",
     options: [
-      { id: "A", text: "全场躺了你还能叫代驾、收桌子、扶人上车", score: 3 },
-      { id: "B", text: "能跟上节奏，喝到最后有点晕但还清醒", score: 0 },
-      { id: "C", text: "一杯脸红两杯上头三杯你就是桌上的战损品", score: -3 },
+      { id: "A", text: "基本没响过——别人都倒了你还在帮忙收桌", scores: { C: 3, G: 1 } },
+      { id: "B", text: "脸发热、话变多，像手机进了低电量模式", scores: { C: 0, E: 1 } },
+      { id: "C", text: "一口下去就全身泛红，预警系统灵敏度堪比军用雷达", scores: { C: -3 } },
     ],
   },
   {
-    id: "Q20", dimension: "C", angle: "上头速度",
-    text: "从清醒到「嗯有点上头了」，你大概需要多久？",
+    id: "Q20", dimension: "C", angle: "脸色管理",
+    text: "喝了三杯之后自拍，你的脸色大概是？",
     options: [
-      { id: "A", text: "别人都觉得你该醉了但你一点感觉没有", score: 3 },
-      { id: "B", text: "两三个小时，慢慢有感觉", score: 0 },
-      { id: "C", text: "第一杯没喝完脸就红了，上头速度比 5G 还快", score: -3 },
+      { id: "A", text: "完全看不出来喝了——被朋友怀疑在喝水", scores: { C: 3 } },
+      { id: "B", text: "微微泛红，美颜相机能修回来的程度", scores: { C: 1 } },
+      { id: "C", text: "关公附体，连耳朵都是红的。不用美颜用黑白滤镜", scores: { C: -3, G: -1 } },
     ],
   },
   {
-    id: "Q21", dimension: "C", angle: "酒类适应",
-    text: "关于不同种类的酒，哪个最像你？",
+    id: "Q21", dimension: "C", angle: "混搭挑战",
+    text: "经典死亡组合：啤酒→红酒→白酒→调酒。你闯到第几关？",
     options: [
-      { id: "A", text: "白的啤的红的洋的来者不拒，都是水", score: 3 },
-      { id: "B", text: "有一两种擅长的，其他也能应付", score: 0 },
-      { id: "C", text: "喝什么都一样——一样的快倒", score: -3 },
+      { id: "A", text: "通关了还在问「还有吗」——你是 bug 不是玩家", scores: { C: 3, D: 1 } },
+      { id: "B", text: "白酒关有点晕，但没倒。第二天头疼了半天", scores: { C: 0 } },
+      { id: "C", text: "啤酒关就退赛了。你从来不碰这种副本", scores: { C: -3, D: -1 } },
     ],
   },
   {
-    id: "Q22", dimension: "C", angle: "宿醉恢复",
-    text: "喝完酒第二天早上，你的身体状态？",
+    id: "Q22", dimension: "C", angle: "江湖传说",
+    text: "关于你的酒量，朋友圈里流传最广的一句评价是？",
     options: [
-      { id: "A", text: "该上班上班该健身健身，像什么都没发生", score: 3 },
-      { id: "B", text: "有点头疼，一杯咖啡基本满血复活", score: 0 },
-      { id: "C", text: "躺尸一整天，期间多次发毒誓「再也不喝了」", score: -3 },
+      { id: "A", text: "「TA 是永远清醒的那个」——像酒桌上的 NPC", scores: { C: 3 } },
+      { id: "B", text: "「还行，不拉胯也不逆天」——路人水平", scores: { C: 0 } },
+      { id: "C", text: "「TA 不是来喝酒的，是来表演过敏的」", scores: { C: -3, D: -1 } },
     ],
   },
   {
-    id: "Q23", dimension: "C", angle: "自我定位",
-    text: "全场酒量排个名，你大概在？",
+    id: "Q23", dimension: "C", angle: "节奏攻防",
+    text: "对面的人一直说「干了干了」，频率越来越高。你的求生策略？",
     options: [
-      { id: "A", text: "前三不虚，朋友圈公认「永远倒数第一个倒」", score: 3 },
-      { id: "B", text: "中游水平，不丢人也不能太嚣张", score: 0 },
-      { id: "C", text: "垫底。你来酒局是凑人数的不是凑酒量的", score: -3 },
+      { id: "A", text: "不需要策略，你的配速比 TA 还快", scores: { C: 2, E: 1, D: 1 } },
+      { id: "B", text: "碰杯但只抿一小口，表情管理到位", scores: { C: 0 } },
+      { id: "C", text: "趁 TA 不注意把酒倒进旁边的花盆里", scores: { C: -2, G: -1 } },
     ],
   },
   {
-    id: "Q24", dimension: "C", angle: "极限战绩",
-    text: "你人生中喝到最猛那一次，后果是？",
+    id: "Q24", dimension: "C", angle: "数据面板",
+    text: "如果酒量有等级系统，你查看自己的面板显示？",
     options: [
-      { id: "A", text: "比别人多喝一倍，第二天照常上班。疑似基因突变", score: 3 },
-      { id: "B", text: "确实猛了，断片一小段，但整体还算体面", score: 0 },
-      { id: "C", text: "你的「最猛」就是别人的「热身」，两杯就是极限", score: -3 },
+      { id: "A", text: "Lv.MAX「传说级·千杯不醉」，还附赠称号「人形解酒器」", scores: { C: 3, D: 1 } },
+      { id: "B", text: "Lv.5「普通级·社交达标」——勉强够用", scores: { C: 0 } },
+      { id: "C", text: "Lv.1「青铜级·闻酒色变」，经验值永远卡在 0%", scores: { C: -3 } },
     ],
   },
 
   // ==================== G 酒德 (Grace) ====================
-  // 测量：你对周围人的影响——照顾全场/自得其乐/制造混乱
   {
-    id: "Q25", dimension: "G", angle: "关注他人",
-    text: "你注意到有人一直没怎么说话，你会？",
+    id: "Q25", dimension: "G", angle: "隐形守护",
+    text: "你发现有个不太熟的人被连续敬了三次酒，脸色已经不对了。你？",
     options: [
-      { id: "A", text: "主动端杯过去聊几句，帮 TA 融入话题", score: 3 },
-      { id: "B", text: "心里注意到了，但不会特意做什么", score: 0 },
-      { id: "C", text: "那个一直没说话的人……就是你自己", score: -3 },
+      { id: "A", text: "自然地端起杯子插进去：「这杯我来！跟X哥好久没碰了」", scores: { G: 3, E: 1, S: 1 } },
+      { id: "B", text: "在旁边小声提醒一下，但不会出头", scores: { G: 0 } },
+      { id: "C", text: "忙着玩自己的骰子，没注意到这回事", scores: { G: -2, E: 1 } },
     ],
   },
   {
-    id: "Q26", dimension: "G", angle: "收场能力",
-    text: "酒局结束，桌上一片狼藉，有人趴着了。你？",
+    id: "Q26", dimension: "G", angle: "战损评估",
+    text: "朋友喝多了趴桌上，手机还在外放抖音。你的第一个动作？",
     options: [
-      { id: "A", text: "叫代驾、结账、扶人上车、给家人报平安——全套你来", score: 3 },
-      { id: "B", text: "帮着张罗一下，跟别人分工送人回家", score: 0 },
-      { id: "C", text: "你可能就是那个趴着的 / 你早就走了", score: -3 },
+      { id: "A", text: "帮 TA 关掉外放、扶正坐姿、倒杯水放手边", scores: { G: 3 } },
+      { id: "B", text: "拍拍 TA 肩膀「没事吧」，得到含糊回应后继续聊", scores: { G: 0, E: 1 } },
+      { id: "C", text: "把手机转过来看 TA 在刷什么——顺便截个图发群里", scores: { G: -3, E: 1 } },
     ],
   },
   {
-    id: "Q27", dimension: "G", angle: "劝酒态度",
-    text: "有人明显不想喝但被灌酒，你会？",
+    id: "Q27", dimension: "G", angle: "结账博弈",
+    text: "服务员把账单放到桌上那一刻，桌上安静了两秒。你？",
     options: [
-      { id: "A", text: "直接挡：「这杯我替 TA 喝了，别灌了」", score: 3 },
-      { id: "B", text: "打个圆场：「差不多得了」", score: 0 },
-      { id: "C", text: "你就是灌酒的那个 / 在旁边起哄「喝喝喝！」", score: -3 },
+      { id: "A", text: "趁这两秒扫码付了——你享受这种「大家发现时已经晚了」的感觉", scores: { G: 2, D: 1 } },
+      { id: "B", text: "打开计算器发起精确 AA，连服务费都算进去了", scores: { G: 0 } },
+      { id: "C", text: "突然很认真地在回一条消息——时间恰到好处", scores: { G: -2, E: -1 } },
     ],
   },
   {
-    id: "Q28", dimension: "G", angle: "黑历史",
-    text: "回想你的酒局黑历史，最接近哪个？",
+    id: "Q28", dimension: "G", angle: "八卦防火墙",
+    text: "有人借着酒劲开始爆另一个朋友的猛料。桌上笑成一片时你？",
     options: [
-      { id: "A", text: "没有黑历史——你是帮别人收拾黑历史的人", score: 3 },
-      { id: "B", text: "偶尔闹过一次，事后诚恳道歉了", score: 0 },
-      { id: "C", text: "你的黑历史能出一本书，朋友聚会保留节目就是复述你的事迹", score: -3 },
+      { id: "A", text: "笑完赶紧转话题：「行了行了，说个我自己的糗事」", scores: { G: 3, S: 1, E: 1 } },
+      { id: "B", text: "没接话也没拦，等这个话题自然过去", scores: { G: 0, S: -1 } },
+      { id: "C", text: "笑得最大声的就是你，还追问「然后呢？」", scores: { G: -3, E: 2 } },
     ],
   },
   {
-    id: "Q29", dimension: "G", angle: "隐私边界",
-    text: "酒局上拍了些照片和视频，你会？",
+    id: "Q29", dimension: "G", angle: "深夜物流",
+    text: "凌晨一点散场，最晕的那个人住得最远。你？",
     options: [
-      { id: "A", text: "先问所有人「能发吗」，得到许可才发", score: 3 },
-      { id: "B", text: "发自己的没问题，有别人的会打个码", score: 0 },
-      { id: "C", text: "专挑别人最丑最醉的发出去，配文「哈哈哈哈」", score: -3 },
+      { id: "A", text: "帮 TA 叫好车、输好地址、给 TA 室友发了消息「注意接一下」", scores: { G: 3, S: 1 } },
+      { id: "B", text: "问了句「能到家吗」，TA 含糊点头你就放心走了", scores: { G: 0 } },
+      { id: "C", text: "你都不知道 TA 什么时候走的——你也没好到哪去", scores: { G: -2, C: -1 } },
     ],
   },
   {
-    id: "Q30", dimension: "G", angle: "终极自评", isHidden: true,
-    text: "最后一题——如果酒局是一场游戏，你是什么角色？",
+    id: "Q30", dimension: "G", angle: "终极定位", isHidden: true,
+    text: "如果今晚的酒局是一部电影，片尾字幕里你的角色名是？",
     options: [
-      { id: "A", text: "奶妈 / 辅助——确保全队存活是你的使命", score: 3 },
-      { id: "B", text: "输出 / DPS——你负责把气氛打出来", score: 0 },
-      { id: "C", text: "开了外挂的 GM——你不属于任何阵营，你就是规则本身", score: 0, hiddenTrigger: true },
+      { id: "A", text: "「场务」——灯光音响道具散场全管，没你这局开不起来", scores: { G: 3, S: 1 } },
+      { id: "B", text: "「主角的损友」——名场面都有你，经典台词贡献者", scores: { E: 2, D: 1 } },
+      { id: "C", text: "「导演兼编剧」——表面参与，实际你在操控一切走向", scores: {}, hiddenTrigger: true },
     ],
   },
 ];

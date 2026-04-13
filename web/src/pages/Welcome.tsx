@@ -51,6 +51,10 @@ export default function Welcome() {
         开始测试
       </button>
 
+      <button className="btn-gallery" onClick={() => navigate("/gallery")}>
+        人格图鉴
+      </button>
+
       <p className="welcome-footer">
         不上传任何数据 · 仅供娱乐参考
       </p>

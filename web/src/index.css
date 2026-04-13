@@ -152,10 +152,136 @@ body {
   transform: translateY(0);
 }
 
+.btn-gallery {
+  background: transparent;
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 10px 32px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+
+.btn-gallery:hover {
+  border-color: var(--text-2);
+  color: var(--text);
+}
+
 .welcome-footer {
   font-size: 12px;
   color: var(--text-2);
   opacity: 0.6;
+}
+
+/* ====== Gallery ====== */
+
+.gallery {
+  min-height: 100dvh;
+  padding: 20px 0 40px;
+}
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.gallery-title {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.gallery-count {
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gallery-group {
+  margin-bottom: 24px;
+}
+
+.gallery-group-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.gallery-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  border-top: 3px solid var(--theme, var(--border));
+}
+
+.gallery-card:hover {
+  border-color: var(--theme, var(--accent));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.gallery-card-code {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--theme, var(--text));
+  letter-spacing: 1px;
+}
+
+.gallery-card-name {
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.gallery-card-dim {
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 1px;
+}
+
+.gallery-card-hidden {
+  border: 2px dashed var(--border);
+  border-top: 3px dashed var(--border);
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.gallery-card-hidden:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border);
+}
+
+.gallery-card-hidden .gallery-card-code {
+  color: var(--text-2);
+  font-size: 20px;
 }
 
 /* ====== Quiz ====== */

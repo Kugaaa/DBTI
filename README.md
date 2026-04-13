@@ -92,28 +92,27 @@ dbti/
 ├── kb/                          # 知识库
 │   ├── personality-profiles.md  # 人格设定文档（完整画像、语录、评价）
 │   └── personalities.json       # 人格结构化数据
-├── web/                         # React 答题应用
-│   ├── src/
-│   │   ├── data/
-│   │   │   ├── questions.ts     # 30 道测试题
-│   │   │   └── personalities.ts # 28 种人格数据
-│   │   ├── utils/
-│   │   │   └── scoring.ts       # 计分逻辑 & 人格判定
-│   │   ├── pages/
-│   │   │   ├── Welcome.tsx      # 欢迎页
-│   │   │   ├── Quiz.tsx         # 答题页
-│   │   │   └── Result.tsx       # 结果报告页
-│   │   ├── App.tsx
-│   │   ├── main.tsx
-│   │   └── index.css
-│   └── package.json
+├── src/
+│   ├── data/
+│   │   ├── questions.ts         # 30 道测试题
+│   │   └── personalities.ts     # 28 种人格数据
+│   ├── utils/
+│   │   └── scoring.ts           # 计分逻辑 & 人格判定
+│   ├── pages/
+│   │   ├── Welcome.tsx          # 欢迎页
+│   │   ├── Quiz.tsx             # 答题页
+│   │   ├── Gallery.tsx          # 人格图鉴页
+│   │   └── Result.tsx           # 结果报告页
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── package.json
 └── cursor_sbti.md               # 设计灵感来源（SBTI 参考对话）
 ```
 
 ## 快速开始
 
 ```bash
-cd web
 npm install
 npm run dev
 ```

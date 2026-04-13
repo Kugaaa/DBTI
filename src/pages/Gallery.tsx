@@ -133,7 +133,7 @@ function PersonalityDetail({ p, onBack }: { p: Personality; onBack: () => void }
 
         <div className="score-panel">
           <h3>维度分布</h3>
-          {(["D", "E", "S"] as DimensionKey[]).map((k) => (
+          {(["D", "E", "S"] as const).map((k) => (
             <DimensionBar key={k} dimKey={k} level={p.dimensions[k] as Level} />
           ))}
         </div>

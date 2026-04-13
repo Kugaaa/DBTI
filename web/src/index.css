@@ -554,8 +554,77 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.result-snapshot {
+  width: 100%;
+}
+
+.result-watermark {
+  font-size: 11px;
+  color: var(--text-2);
+  opacity: 0.4;
+  text-align: center;
+  padding: 12px 0 4px;
+  letter-spacing: 1px;
+}
+
 .result-actions {
-  padding: 8px 0;
+  width: 100%;
+  display: flex;
+  gap: 12px;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-save {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn-save:hover:not(:disabled) {
+  border-color: var(--text-2);
+}
+
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn-share {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-share:hover {
+  box-shadow: 0 4px 16px rgba(250, 84, 28, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-retry {
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.btn-retry:hover {
+  border-color: var(--text-2);
+  color: var(--text);
 }
 
 .result-footer {
